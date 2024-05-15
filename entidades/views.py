@@ -1,4 +1,4 @@
-from django.db.models import Sum
+from django.db.models import Count, Sum
 
 from rest_framework import status
 from rest_framework.decorators import action
@@ -11,9 +11,12 @@ from entidades.serializers import MaestroSerializer, SalonSerializer
 
 class MaestroViewSet(ModelViewSet):
     serializer_class = MaestroSerializer
+    ordering_fields = ['nombre_completo', 'salones']
 
     def get_queryset(self):
-        return Maestro.objects.all().order_by('nombre_completo')
+        return Maestro.objects.all()\
+            .annotate(num_salones=Count("salones"))\
+                .order_by('-num_salones', 'nombre_completo')
     
     @action(detail=False, methods=('get',))
     def sueldos(self, request):

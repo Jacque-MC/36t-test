@@ -17,6 +17,7 @@ class SalonMinSerializer(serializers.ModelSerializer):
 
 class MaestroSerializer(serializers.ModelSerializer):
     salones = SalonMinSerializer(many=True)
+    num_salones = serializers.IntegerField(read_only=True, required=False)
     class Meta:
         model = Maestro
         fields = '__all__'
