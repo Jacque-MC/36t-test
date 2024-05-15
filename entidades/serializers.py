@@ -33,7 +33,9 @@ class MaestroSerializer(serializers.ModelSerializer):
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
         instance.save()
-        # for salon in salones:
-        #     for attr, value in salon.items():
-        #         setattr(salon, attr, value)
+        for salon in salones:
+            salon_instance = instance.salones.get(pk=salon['id'])
+            for attr, value in salon.items():
+                setattr(salon_instance, attr, value)
+            salon_instance.save()
         return instance
